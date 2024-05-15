@@ -66,10 +66,37 @@ class ClearBitcoinTwitter:
 class ClearBitcoinHistory:
     def format_date(self, df):
         df['Date'] = pd.to_datetime(df['Date'], format='%m/%d/%Y')
-        df['Date'] = df['Date'].dt.tz_localize('UTC').dt.strftime('%m-%d-%Y')
+        df['Date'] = df['Date'].dt.tz_localize('UTC').dt.strftime('%Y-%m-%d')
         return df
 
     def format_value_price_to_number(self, df):
         df['Price'] = df['Price'].replace(
             {'(\\D)': ''}, regex=True).replace(',', '').astype(float)
         return df
+
+
+"""
+dataset_bitcoin_twitter['text'] = dataset_bitcoin_twitter['text'].str.lower()
+
+# Vectorization using Bag of Words
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(dataset_bitcoin_twitter['text'])
+
+# Convert to DataFrame
+df_text_features = pd.DataFrame(
+    X.toarray(), columns=vectorizer.get_feature_names_out())
+
+# Concatenate original DataFrame with text features
+dataset_bitcoin_twitter = pd.concat(
+    [dataset_bitcoin_twitter, df_text_features], axis=1)
+
+
+list_collumns = ["user_name", "user_created",
+                 "source", "is_retweet", "user_verified", "text"]
+dataset_bitcoin_twitter = clearTwitter.remove_collumns(
+    dataset_bitcoin_twitter, list_collumns)
+# clearTwitter.view_data_empty(dataset_bitcoin_twitter)
+clearTwitter.remove_rows_with_collumns_empty(dataset_bitcoin_twitter)
+# clearTwitter.view_data_empty(dataset_bitcoin_twitter)
+dataset_bitcoin_twitter
+"""
